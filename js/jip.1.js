@@ -25,7 +25,7 @@
   // The actual plugin constructor
   function Plugin( element, options ) {
     this.element = element;
-
+    $t = this;
     // jQuery has an extend method which merges the contents of two or 
     // more objects, storing the result in the first object. The first object
     // is generally empty as we don't want to alter the default options for
@@ -37,12 +37,16 @@
 
     this.init();
 
-
-    $('.jip_wrapper .select_btn').on('click',function(){
+    var jpWrapper = $(".jip_wrapper");
+    console.log(jpWrapper.length);
+   jpWrapper.eq(jpWrapper.length-1).find(".select_btn").on('click',function(e){
+          e.preventDefault();
           var target = $(this).attr('rel');
+          console.log(target);
           showModal(target);
           return false;
       });
+
   }
 
   Plugin.prototype.init = function () {
@@ -53,12 +57,8 @@
     $o = this.options;
 
     // add layout to each input field.
-      $(this.element).each(function(){
-        var target = $(this).attr("name");
-        addLayout(target, $o)
-      });
-
-
+        var target = $($t).attr("name");
+        addLayout(target, $o);
   };
 
   function addLayout(target, options){
