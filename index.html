@@ -10,6 +10,7 @@
 
     <!-- Le styles -->
     <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/jip.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -54,7 +55,7 @@
   <div class="control-group">
     <label class="control-label" for="avatar2">Avatar 2</label>
     <div class="controls">
-      <input type="text" id="avatar2" name="avatar2" class="jip" value="avatar2.jpg">
+      <input type="text" id="avatar2" name="avatar2" class="jip" value="Gir_Avatar_by_Narchy13.gif">
     </div>
   </div>
 </form>
@@ -72,7 +73,7 @@
     <script type="text/javascript">
     $(document).ready(function(){
       $('.jip').jip({
-        propertyName: 'a custom value'
+          data: "/getGallery.php"
       });
     });
     </script>
