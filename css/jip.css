@@ -1,3 +1,14 @@
 
 
-.jip_modal .modal-body ul li{list-style: none;  float :left ; padding: 10px; }
+.jip_modal .modal-body ul li{list-style: none;  float :left ; p}
+
+.jip_modal img{z-index: 999; display:block; position:relative;}
+
+
+
+.jip_modal  .modal-header{boder-bottom:none !important;}
+
+
+.jip_modal .pickerImage img{padding: 10px; }
+.jip_modal .pickerImage img:hover{ cursor: pointer;}
+.jip_modal .pickerImage img.active{ padding:9px; border: 1px #ccc solid; background: #eee;}
