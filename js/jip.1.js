@@ -32,6 +32,8 @@
             modal_title: 'Select A Image',
             save_btn_text : "Select Image",
             btn_text : "Select Image",
+            paging : true,
+            per_page : 10, 
         };
 
     // The actual plugin constructor
@@ -77,29 +79,84 @@
         },
 
         closeModal : function(){
-            $('.jip_modal').modal('hide')
+            $('.jip_modal').modal('hide');
             return false;
         },
 
         getData : function(callback){
-            var opts = this.options;
-            var $modal  = $(".jip_modal .modal-body ul");
+                var opts = this.options;
+                var paging = this.options.paging;
+                var itemsize = 0; 
+                var $elm  = $(".jip_modal .modal-body");
+                var _this = this ; 
+                
+                $elm.html("<ul></ul>")
 
-            $modal.html("");
+                $.getJSON(opts.data, function(items){      
+                          _this.insertImages(items, $elm,  _this.createPaging);
+                });
 
-            $.getJSON(opts.data, function(items){
-                      
-                      $.each(items, function(i, item){
-                        var imgstring = "<li class=\"pickerImage\"><img src=\""+ opts.galleryUrl + item + "\" alt=\"" + item + "\"/></li>"+"\n";
-                        $modal.append(imgstring);
-                      });
+                $elm.append('<div class="clearfix">&nbsp;</div>');  // add clearfix to make sure their are no float issues.
+
+                if (callback && typeof(callback) === "function") {  
+                        callback();  
+                }  
+        },
+
+        insertImages : function(items , $elm , callback){
+                var opts = this.options;
+                var itemCount = $(items).size();
+                var count = 0 
+                $elm.html("");
+
+                
+                 $.each(items, function(i,item){
+                    var imgstring = "<li class=\"pickerImage\"><img src=\""+ opts.galleryUrl + item + "\" alt=\"" + item + "\"/></li>"+"\n";
+                    $elm.append(imgstring);
+                    count = count + 1 ;
+                    if(count == itemCount){
+                        if (callback && typeof(callback) === "function") {  
+                              callback(opts);  
+                        }  
+                    }
+                });
+
+        },
+        createPaging : function(opts){
+
+          var newcontent = "<ul>";
+
+
+          var perPage =  opts.per_page;
+          var count = 1 ; 
+
+      console.log($(".modal-body li").size()  + "  size? "); 
+
+
+           $(".modal-body li").each(function(){
+                        newcontent += $(this).html(); 
+
+                        if(count == opts.per_page){
+                             newcontent += "</ul> <ul>";
+                             count = 0; 
+                        }
+
+                        count = count + 1; 
             });
 
-             $modal.append('<div class="clearfix">&nbsp;</div>');
+          newcontent +="</ul>" ;
 
-            if (callback && typeof(callback) === "function") {  
-                    callback();  
-            }  
+          newcontent += "<div class=\"clearfix\">&nbsp;</div>";
+
+          $(".jip_modal .modal-body").html(newcontent);
+
+         // create links 
+         //          
+
+         var links = '<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a> </li> <li class="next">  <a href="#">Next &rarr;</a> </li></ul>';
+
+          $(".jip_modal .modal-body").append(links);
+
         }
 
     };
@@ -139,16 +196,16 @@
               modal += "    <div class=\"modal-header\">";
               modal += "      <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;<\/button>";
               modal += "      <h3>"+options.modal_title+"<\/h3>";
-              modal += "      <ul class=\"nav nav-tabs\">";
-              modal += "          <li class=\"active\"><a href=\"#jip_gallery\"  data-toggle=\"tab\">Gallery</a></li>";
-              modal += "          <li><a href=\"#jip_upload\" data-toggle=\"tab\">Upload</a></li>";
-              modal += "      </ul>";
+              // modal += "      <ul class=\"nav nav-tabs\">";
+              // modal += "          <li class=\"active\"><a href=\"#jip_gallery\"  data-toggle=\"tab\">Gallery</a></li>";
+              // modal += "          <li><a href=\"#jip_upload\" data-toggle=\"tab\">Upload</a></li>";
+              // modal += "      </ul>";
               modal += "    <\/div>";
               modal += "    <div class=\"modal-body\">";
-              modal += "        <div class=\"tab-content\">";
+              // modal += "        <div class=\"tab-content\">";
               modal += "               <div class=\"tab-pane active\" id=\"jip_gallery\"><ul><\/ul></div>";
-              modal += "               <div class=\"tab-pane\" id=\"jip_upload\">coming soon.. </div>";
-              modal += "         </div>";
+              // modal += "               <div class=\"tab-pane\" id=\"jip_upload\">coming soon.. </div>";
+              // modal += "         </div>";
               modal += "    <\/div>";
               modal += "    <div class=\"modal-footer\">";
               modal += "      <a href=\"#\" class=\"btn close\" data-dismiss=\"modal\">Close<\/a>";
@@ -191,24 +248,24 @@
                 var target = $(this).attr('name');
 
                 // onclick for select image button
-                $('.jip_wrapper[rel="'+target+'"] .select_btn').on('click',function(){
+                $('.jip_wrapper[rel="'+target+'"] .select_btn').on('click',function(e){
+                    e.preventDefault();
                     $jip.showModal($(this));
-                    return false;
+                   
                 });
 
                 $('.jip_modal').modal({ show:false});
 
-
-                $('.jip_modal a:first').tab('show');
                 
                 // selecting a image in modal 
                 $('.jip_modal .pickerImage img').live('click',function(e){
+                      e.preventDefault();
                       selectImg($(this), target);
                 });
 
-                $(".jip_save").on('click', function(){
+                $(".jip_save").on('click', function(e){
+                    e.preventDefault(); 
                     setImg();
-                  return false;
                 });
 
             }
