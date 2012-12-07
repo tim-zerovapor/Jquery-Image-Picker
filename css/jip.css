@@ -1,5 +1,8 @@
 
 
+.jip_modal .modal-body ul{display:none;}
+.jip_modal .modal-body ul.pager{display:block;}
+
 .jip_modal .modal-body ul li{list-style: none;  float :left ; p}
 
 .jip_modal img{z-index: 999; display:block; position:relative;}
